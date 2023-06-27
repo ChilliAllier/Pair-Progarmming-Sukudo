@@ -1,5 +1,16 @@
 
-#include "Sudoku.h"
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include<Windows.h>
+#include <time.h>
+#include <random>
 using namespace std;
 
 
@@ -70,7 +81,6 @@ public:
 
     void selectBlank(int nums, vector<vector<char>>& board)
     {
-        srand(time(NULL));
         while (nums)
         {
             int row = rand() % 9;
@@ -87,10 +97,10 @@ public:
     {
         //小九宫格中的行和列交换，有以下９种交换方式
         int choice[9][2] = { {0,1},{0,2},{1,2},{3,4},{3,5},{4,5},{6,7},{6,8},{7,8} };
-        srand(time(NULL));//设置动态种子
-        for (int j = 0; j < 3; j++)//Ｊ代表交换次数，也可以不用这个循环，就交换一次
+        for (int j = rand()%20; j < 30; j++)//Ｊ代表交换次数，也可以不用这个循环，就交换一次
         {
             int i = rand() % 9;//取0－8之间的随机值
+            cout << i << " ";
             board[choice[i][0]].swap(board[choice[i][1]]);//随机交换两行
             swapCol(choice[i][0], choice[i][1], board);//随机交换两列
         }
@@ -135,17 +145,60 @@ public:
 
     }
 };
+void outputSudokus(vector<vector<char>>& board) { //把数独写入文件
+    FILE* out = fopen("sudoku.txt", "a+");
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board.size(); j++)
+        {
+            fputc('|', out);
+            fputc(board[i][j], out);
 
-void createSukudoFinals(int n) {
-    vector<vector<char>>blank(9, vector<char>(9, '$'));
-    sudoku** sudokuList = new sudoku*[n];
-    for (int i = 0; i < n; i++) {
-        sudokuList[i] = new sudoku(blank);
-        sudokuList[i]->create(0, blank);
+        }
+        fputc('|', out);
+        fputc('\n', out);
     }
-
+    fputc('\n', out);
 }
 
+void createSukudoFinals(int n) { //生成指定数量的数独终盘
+    //sudoku** sudokuList = new sudoku*[n];
+    for (int i = 0; i < n; i++) {
+        vector<vector<char>>blank(9, vector<char>(9, '$'));
+        sudoku s(blank);
+        s.create(0, blank);
+        outputSudokus(blank);
+    }
+}
+
+void createSukudoGames(int blanks,int n) { //按挖空数生成数独游戏
+    //sudoku** sudokuList = new sudoku*[n];
+    for (int i = 0; i < n; i++) {
+        vector<vector<char>>blank(9, vector<char>(9, '$'));
+        sudoku s(blank);
+        s.create(blanks, blank);
+        outputSudokus(blank);
+    }
+}
+
+void createSukudoGamesByDiff(int Diff, int n) { //按难度生成数独游戏
+    if (Diff == 1)
+        createSukudoGames(20, n);
+    else if (Diff == 2)
+        createSukudoGames(35, n);
+    else if (Diff == 3)
+        createSukudoGames(50, n);
+}
+void rando()
+{
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 30; j++)//Ｊ代表交换次数，也可以不用这个循环，就交换一次
+        {
+            int i = rand() % 9;//取0－8之间的随机值
+            cout << i << " ";
+        }
+    }
+}
 int main()
 {
     /*vector<vector<char>>board = { vector<char>{'5','3','.','.','7','.','.','.','.'},
@@ -159,9 +212,9 @@ int main()
                                   vector<char>{'.','.','.','.','8','.','.','7','9'}, };*/
 
     vector<vector<char>>blank(9, vector<char>(9, '$'));//创建一个9*9的空二维数组
-
+    srand(time(NULL));//设置动态种子
     sudoku s(blank);
-    s.create(0, blank);//创建50个空格的数独
+    s.create(50, blank);//创建50个空格的数独
     if (s.active)
     {
         cout << "创建的数独为：" << endl;
@@ -174,10 +227,13 @@ int main()
     {
         cout << "此数独的解是：" << endl;
         s.printBoard(blank);
+        outputSudokus(blank);
     }
+ 
     else
         cout << "解题失败！" << endl;
-
+ 
+    createSukudoGamesByDiff(3, 10);
     return 0;
 }
 
