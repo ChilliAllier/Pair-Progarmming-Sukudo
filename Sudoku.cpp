@@ -1,10 +1,5 @@
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include<Windows.h>
+#include "Sudoku.h"
 using namespace std;
 
 
@@ -141,7 +136,15 @@ public:
     }
 };
 
+void createSukudoFinals(int n) {
+    vector<vector<char>>blank(9, vector<char>(9, '$'));
+    sudoku** sudokuList = new sudoku*[n];
+    for (int i = 0; i < n; i++) {
+        sudokuList[i] = new sudoku(blank);
+        sudokuList[i]->create(0, blank);
+    }
 
+}
 
 int main()
 {
@@ -158,7 +161,7 @@ int main()
     vector<vector<char>>blank(9, vector<char>(9, '$'));//创建一个9*9的空二维数组
 
     sudoku s(blank);
-    s.create(50, blank);//创建50个空格的数独
+    s.create(0, blank);//创建50个空格的数独
     if (s.active)
     {
         cout << "创建的数独为：" << endl;

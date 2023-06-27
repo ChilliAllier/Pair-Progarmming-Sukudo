@@ -1,5 +1,6 @@
 #include "Imput.h"
 
+
 void InputHandler::check(int argc, char** argv) {
 	if (argc == 3) {
 		string parameter1 = argv[1];
@@ -22,13 +23,14 @@ void InputHandler::check(int argc, char** argv) {
 			int count = 0;
 			FILE* out = fopen("sudoku.txt", "wt");
 			while (in.get(c)) {	//in >> c 会忽略空白回车符
-				}
 			}
-			
-	return;
+		}
+
+		return;
+	}
 }
 
-int InputHandler::isNum(const string& s) {
+int InputHandler::isNum(const string& s) { //将输入的数字转换为int类型
 	size_t size = s.size();
 	if (size > 7)
 		return 0;
