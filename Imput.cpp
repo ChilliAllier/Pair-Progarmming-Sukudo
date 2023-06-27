@@ -22,10 +22,12 @@ void InputHandler::check(int argc, char** argv) {
 			char c;
 			int count = 0;
 			FILE* out = fopen("sudoku.txt", "wt");
+			vector<vector<char>>blank(9, vector<char>(9, '$'));
 			while (in.get(c)) {	//in >> c »áºöÂÔ¿Õ°×»Ø³µ·û
-				vector<vector<char>>blank(9, vector<char>(9, '$'));
+				
 				if (isdigit(c)|| c == '$') {
 					blank[count / 9][count % 9] = c;
+					count++;
 				}
 				if (count == 81) {
 					count = 0;
